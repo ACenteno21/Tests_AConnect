@@ -70,23 +70,23 @@ def get_top_n_score(target, prediction, n):
 
 # Load the CIFAR10 data.
 (X_train, Y_train), (X_test, Y_test) = cifar10.load_data()
-X_train, X_test = normalization(X_train,X_test)    
+X_train, X_test = normalization(X_train,X_test)
 # Input image dimensions.
 input_shape = X_train.shape[1:]
 
 
 # INPUT PARAMTERS:
 isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
-Wstd_err = [0.7]   # Define the stddev for training
+Wstd_err = [0]   # Define the stddev for training
 Conv_pool = [8]
 FC_pool = [2]
 WisQuant = ["yes"]		    # Do you want binary weights?
-BisQuant = WisQuant 
-Wbw = [8]
+BisQuant = ["no"]
+Wbw = [1]
 Bbw = Wbw
 errDistr = ["lognormal"]
 #errDistr = ["normal"]
-saveModel = True
+saveModel = False
 model_name = 'ResNet20_CIFAR10/'
 folder_models = './Models/'+model_name
 folder_results = '../Results/'+model_name+'Training_data/'
@@ -97,11 +97,11 @@ if isAConnect[0]:
     model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
 
 # TRAINING PARAMETERS
-lrate = 1e-2
+lrate = 1e-1
 #lrate = 1e-3        # for Adam optimizer
 if isAConnect[0]:
     #epochs = 120
-    epochs = 60
+    epochs = 120
     epoch1 = 30
     epoch2 = 60
     epoch3 = 100
@@ -140,7 +140,7 @@ def lr_schedule(epoch):
         lr *= 1e-2
     elif epoch > epoch1:
         lr *= 1e-1
-    
+
     print('Learning rate: ', lr)
     return lr
 
@@ -155,7 +155,7 @@ lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
 callbacks = [lr_reducer, lr_scheduler]
 
 #optimizer = tf.keras.optimizers.Adam(learning_rate=0.0)
-optimizer = tf.optimizers.SGD(learning_rate=0.0, 
+optimizer = tf.optimizers.SGD(learning_rate=0.0,
                             momentum=momentum, nesterov= True, decay = lr_decay) #Define optimizer
 
 ################################################################
@@ -175,7 +175,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
         WisQuant_aux = ["no"]
         BisQuant_aux = ["no"]
         errDistr_aux = ["normal"]
-        
+
     for i in range(len(Conv_pool_aux)):
         for p in range (len(WisQuant_aux)):
             if WisQuant_aux[p]=="yes":
@@ -192,7 +192,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         # CREATING NN:
                         if version == 2:
                             model = resnet_v2(input_shape=input_shape, depth=depth,
-                                            isAConnect = isAConnect[d], 
+                                            isAConnect = isAConnect[d],
                                             Wstd=Err,Bstd=Err,
                                             isQuant=[WisQuant_aux[p],BisQuant_aux[p]],
                                             bw=[Wbw_aux[q],Bbw_aux[q]],
@@ -200,19 +200,19 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                             FC_pool=FC_pool_aux[i],
                                             errDistr=errDistr_aux[k])
                         else:
-                            model = resnet_v1(input_shape=input_shape, depth=depth, 
-                                            isAConnect = isAConnect[d], 
+                            model = resnet_v1(input_shape=input_shape, depth=depth,
+                                            isAConnect = isAConnect[d],
                                             Wstd=Err,Bstd=Err,
                                             isQuant=[WisQuant_aux[p],BisQuant_aux[p]],
                                             bw=[Wbw_aux[q],Bbw_aux[q]],
                                             Conv_pool=Conv_pool_aux[i],
                                             FC_pool=FC_pool_aux[i],
                                             errDistr=errDistr_aux[k])
-                        
+
                         ##### PRETRAINED WEIGHTS FOR HIGHER ACCURACY LEVELS
                         if isAConnect[d]:
                             model.set_weights(model_base.get_weights())
-                        
+
                         # NAME
                         if isAConnect[d]:
                             Werr = str(int(100*Err))
@@ -225,10 +225,10 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             name = Nm+'Werr'+'_Wstd_'+Werr+'_Bstd_'+Werr+'_'+quant+errDistr_aux[k]+'Distr'+namev
                         else:
                             name = 'Base'+namev
-                        
+
                         print("*************************TRAINING NETWORK*********************")
                         print("\n\t\t\t", name)
-                        
+
                         #TRAINING PARAMETERS
                         model.compile(loss='sparse_categorical_crossentropy',
                                       optimizer=optimizer,
@@ -241,8 +241,8 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                       validation_data=(X_test, Y_test),
                                       shuffle=True,
                                       callbacks=callbacks)
-                        model.evaluate(X_test,Y_test) 
-                        string = folder_models + name + '.h5'                                
+                        model.evaluate(X_test,Y_test)
+                        string = folder_models + name + '.h5'
                         model.save(string,include_optimizer=False)
                         y_predict =model.predict(X_test)
                         elapsed_time = time.time() - start_time
@@ -250,9 +250,9 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         print("Elapsed time: {}".format(hms_string(elapsed_time)))
                         print('Tiempo de procesamiento (secs): ', time.time()-tic)
                         #Save the accuracy and the validation accuracy
-                        acc = history.history['accuracy'] 
+                        acc = history.history['accuracy']
                         val_acc = history.history['val_accuracy']
-                                      
+
                         # SAVE MODEL:
                         if saveModel:
                             string = folder_models + name + '.h5'
@@ -260,5 +260,5 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             #Save in a txt the accuracy and the validation accuracy for further analysis
                             if not os.path.isdir(folder_results):
                                 os.makedirs(folder_results)
-                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.4f") 
-                            np.savetxt(folder_results+name+'_val_acc'+'.txt',val_acc,fmt="%.4f")              
+                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.4f")
+                            np.savetxt(folder_results+name+'_val_acc'+'.txt',val_acc,fmt="%.4f")
