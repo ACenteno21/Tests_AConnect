@@ -211,7 +211,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
 
                         ##### PRETRAINED WEIGHTS FOR HIGHER ACCURACY LEVELS
                         if isAConnect[d]:
-                            model.set_weights(model_base.get_weights())
+                            #model.set_weights(model_base.get_weights())
 
                         # NAME
                         if isAConnect[d]:
