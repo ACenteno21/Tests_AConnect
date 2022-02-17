@@ -35,7 +35,7 @@ def resnet_layer(inputs,num_filters=16,kernel_size=(3,3),
                             pool = pool,
                             isQuant=isQuant,bw=bw,
                             Op=1,Slice=1)
-    
+
     else:
         conv = Conv2D(num_filters,
                       kernel_size=kernel_size,
@@ -60,7 +60,7 @@ def resnet_layer(inputs,num_filters=16,kernel_size=(3,3),
     return x
 
 
-def resnet_v1(input_shape, depth, num_classes=10, 
+def resnet_v1(input_shape, depth, num_classes=10,
                 isAConnect=False,Wstd=0,Bstd=0,
                 Conv_pool=2,FC_pool=2,errDistr="normal",
                 isQuant=['no','no'],bw=[8,8]):
@@ -101,13 +101,13 @@ def resnet_v1(input_shape, depth, num_classes=10,
     Flip = RandomFlip("horizontal")
     x = Flip(inputs)
     if isAConnect:
-        x = RandomTranslation(0.0,0.0)(x)
-        x = RandomZoom(0.0)(x)
+        x = RandomTranslation(0.1,0.1)(x)
+        x = RandomZoom(0.2)(x)
     else:
         x = RandomTranslation(0.1,0.1)(x)
         x = RandomZoom(0.2)(x)
     x = resnet_layer(inputs=x,
-            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
             pool=Conv_pool,errDistr=errDistr,
             isQuant=isQuant,bw=bw)
 
@@ -120,14 +120,14 @@ def resnet_v1(input_shape, depth, num_classes=10,
             y = resnet_layer(inputs=x,
                             num_filters=num_filters,
                             strides=strides,
-                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                             pool=Conv_pool,errDistr=errDistr,
                             isQuant=isQuant,bw=bw)
             y = resnet_layer(inputs=y,
                             num_filters=num_filters,
                             activation=None,
                             batch_normalization=False, # Added by Luis E. Rueda G. (testing)
-                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                             pool=Conv_pool,errDistr=errDistr,
                             isQuant=isQuant,bw=bw)
             if stack > 0 and res_block == 0:  # first layer but not first stack
@@ -139,7 +139,7 @@ def resnet_v1(input_shape, depth, num_classes=10,
                                 strides=strides,
                                 activation=None,
                                 batch_normalization=False,
-                                isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                                isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                                 pool=Conv_pool,errDistr=errDistr,
                                 isQuant=isQuant,bw=bw)
             x = tf.keras.layers.add([x, y])
@@ -151,7 +151,7 @@ def resnet_v1(input_shape, depth, num_classes=10,
     # v1 does not use BN after last shortcut connection-ReLU
     x = AveragePooling2D(pool_size=8)(x)
     y = Flatten()(x)
-    
+
     if isAConnect:
         y = FC_AConnect(num_classes,Wstd=Wstd,Bstd=Bstd,
                         pool=FC_pool,errDistr=errDistr,
@@ -215,7 +215,7 @@ def resnet_v2(input_shape, depth, num_classes=10,
     x = resnet_layer(inputs=x,
                     num_filters=num_filters_in,
                     #conv_first=True,
-                    isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                    isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                     pool=Conv_pool,errDistr=errDistr,
                     isQuant=isQuant,bw=bw)
 
@@ -243,13 +243,13 @@ def resnet_v2(input_shape, depth, num_classes=10,
                             activation=activation,
                             batch_normalization=batch_normalization,
                             #conv_first=False,           # Removed by Luis Rueda
-                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                             pool=Conv_pool,errDistr=errDistr,
                             isQuant=isQuant,bw=bw)
             y = resnet_layer(inputs=y,
                             num_filters=num_filters_in,
                             #conv_first=False,           # Removed by Luis Rueda
-                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                             pool=Conv_pool,errDistr=errDistr,
                             isQuant=isQuant,bw=bw)
             y = resnet_layer(inputs=y,
@@ -258,7 +258,7 @@ def resnet_v2(input_shape, depth, num_classes=10,
                             #conv_first=False,           # Removed by Luis Rueda
                             activation=None,            # Added by Luis Rueda
                             batch_normalization=False,  # Added by Luis Rueda
-                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                            isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                             pool=Conv_pool,errDistr=errDistr,
                             isQuant=isQuant,bw=bw)
             if res_block == 0:
@@ -270,7 +270,7 @@ def resnet_v2(input_shape, depth, num_classes=10,
                                 strides=strides,
                                 activation=None,
                                 batch_normalization=False,
-                                isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd, 
+                                isAConnect=isAConnect,Wstd=Wstd,Bstd=Bstd,
                                 pool=Conv_pool,errDistr=errDistr,
                                 isQuant=isQuant,bw=bw)
             x = tf.keras.layers.add([x, y])
@@ -286,7 +286,7 @@ def resnet_v2(input_shape, depth, num_classes=10,
     #x = Activation('relu')(x)
     x = AveragePooling2D(pool_size=8)(x)
     y = Flatten()(x)
-    
+
     if isAConnect:
         y = FC_AConnect(num_classes,Wstd=Wstd,Bstd=Bstd,
                         pool=FC_pool,errDistr=errDistr,
@@ -300,5 +300,3 @@ def resnet_v2(input_shape, depth, num_classes=10,
     # Instantiate model.
     model = Model(inputs=inputs, outputs=outputs)
     return model
-
-
