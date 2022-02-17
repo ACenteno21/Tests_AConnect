@@ -43,16 +43,16 @@ def get_top_n_score(target, prediction, n):
     return np.mean(precision)
 
 # LOADING DATASET:
-(X_train, Y_train), (X_test, Y_test) = tf.keras.datasets.cifar10.load_data()    
-X_train, X_test = normalization(X_train,X_test)    
-sL = 3 
+(X_train, Y_train), (X_test, Y_test) = tf.keras.datasets.cifar10.load_data()
+X_train, X_test = normalization(X_train,X_test)
+sL = 3
 Nlayers_noAC = [1,3,6,8,11,13,15,18,20,22,25,27,29] #wo AC layer numbers
 NlayersBase = [1,2,4,5,7,8,9,11,12,13,15,16,17]
 Nlayers_AC = [1,4,8,11,15,18,21,25,28,31,35,38,41] #AConnect layer numbers
 
 #Shift the layer index due to the preprocessing layers
 for j in range(len(NlayersBase)):
-    #Nlayers_AC[j] = Nlayers_AC[j] + sL 
+    #Nlayers_AC[j] = Nlayers_AC[j] + sL
     Nlayers_noAC[j] = Nlayers_noAC[j] + sL
     Nlayers_AC[j] = Nlayers_AC[j]+2
 """
@@ -74,22 +74,22 @@ model_aux=tf.keras.applications.VGG16(weights="imagenet", include_top=False,inpu
 
 # INPUT PARAMTERS:
 isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
-Wstd_err = [0.7]   # Define the stddev for training
+Wstd_err = [0]   # Define the stddev for training
 Conv_pool = [2]
 FC_pool = [2]
 WisQuant = ["yes"]		    # Do you want binary weights?
-BisQuant = WisQuant 
-Wbw = [8]
+BisQuant = ["no"]
+Wbw = [2]
 Bbw = Wbw
 errDistr = ["lognormal"]
 #errDistr = ["normal"]
-saveModel = True
+saveModel = False
 model_name = 'VGG16_CIFAR10/'
 folder_models = './Models/'+model_name
 folder_results = '../Results/'+model_name+'Training_data/'
 #net = folder_models+'16Werr_Wstd_80_Bstd_80.h5'
-net_base = folder_models+'Base.h5'
-model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
+#net_base = folder_models+'Base.h5'
+#model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
 
 # TRAINING PARAMETERS
 learning_rate = 0.1
@@ -104,7 +104,7 @@ lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
                 decay_steps=196,
                 decay_rate=0.9,
                 staircase=True)
-optimizer = tf.optimizers.SGD(learning_rate=lr_schedule, 
+optimizer = tf.optimizers.SGD(learning_rate=lr_schedule,
                             momentum=momentum) #Define optimizer
 """
 def lr_scheduler(epoch):
@@ -114,10 +114,10 @@ def lr_scheduler(epoch):
         lr = 0.01 * (0.5 ** ((epoch-50) // lr_drop))
     return lr
 
-reduce_lr = tf.keras.callbacks.LearningRateScheduler(lr_scheduler)    
-optimizer = tf.optimizers.SGD(learning_rate=0.0, 
+reduce_lr = tf.keras.callbacks.LearningRateScheduler(lr_scheduler)
+optimizer = tf.optimizers.SGD(learning_rate=0.0,
                             momentum=momentum, nesterov= True, decay = lr_decay) #Define optimizer
-            
+
 ### TRAINING
 for d in range(len(isAConnect)): #Iterate over the networks
     if isAConnect[d]: #is a network with A-Connect?
@@ -128,7 +128,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
         Wstd_aux = [0]
         FC_pool_aux = [0]
         Conv_pool_aux = [0]
-        
+
     for i in range(len(Conv_pool_aux)):
         for p in range (len(WisQuant)):
             if WisQuant[p]=="yes":
@@ -150,17 +150,17 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                                     Conv_pool=Conv_pool_aux[i],
                                                     FC_pool=FC_pool_aux[i],
                                                     errDistr=errDistr[k],isBin="no")
-                       
+
                         ##### PRETRAINED WEIGHTS FOR HIGHER ACCURACY LEVELS
                         if isAConnect[d]:
                             Nlayers = Nlayers_AC
                             Nlayers0 = Nlayers_noAC
-                            model0 = model_base
+                            #model0 = model_base
                         else:
                             Nlayers = Nlayers_noAC
                             Nlayers0 = NlayersBase
-                            model0 = model_aux
-                        
+                            #model0 = model_aux
+
                         net0='./Models/VGG16_CIFAR10/2Werr_Wstd_70_Bstd_70_8bQuant_lognormalDistr.h5'
                         model0 = tf.keras.models.load_model(net0,custom_objects = custom_objects)
                         model.set_weights(model0.get_weights())
@@ -181,13 +181,13 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             name = Nm+'Werr'+'_Wstd_'+Werr+'_Bstd_'+Werr+'_'+quant+errDistr[k]+'Distr'
                         else:
                             name = 'Base'
-                        
+
                         print("*************************TRAINING NETWORK*********************")
                         print("\n\t\t\t", name)
-                            
+
                         #TRAINING PARAMETERS
                         model.compile(loss='sparse_categorical_crossentropy',
-                                optimizer=optimizer, 
+                                optimizer=optimizer,
                                 metrics=['accuracy'])
 
                         # TRAINING
@@ -197,8 +197,8 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                   validation_data=(X_test, Y_test),
                                   callbacks = [reduce_lr],
                                   shuffle=True)
-                        model.evaluate(X_test,Y_test) 
-                        string = folder_models + name + '.h5'                                
+                        model.evaluate(X_test,Y_test)
+                        string = folder_models + name + '.h5'
                         model.save(string,include_optimizer=False)
                         y_predict =model.predict(X_test)
                         elapsed_time = time.time() - start_time
@@ -206,7 +206,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         print("Elapsed time: {}".format(hms_string(elapsed_time)))
                         print('Tiempo de procesamiento (secs): ', time.time()-tic)
                         #Save the accuracy and the validation accuracy
-                        acc = history.history['accuracy'] 
+                        acc = history.history['accuracy']
                         val_acc = history.history['val_accuracy']
 
                         # SAVE MODEL:
@@ -214,5 +214,5 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             string = folder_models + name + '.h5'
                             model.save(string,include_optimizer=False)
                             #Save in a txt the accuracy and the validation accuracy for further analysis
-                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.4f") 
+                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.4f")
                             np.savetxt(folder_results+name+'_val_acc'+'.txt',val_acc,fmt="%.4f")
