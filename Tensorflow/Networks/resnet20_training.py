@@ -76,7 +76,7 @@ input_shape = X_train.shape[1:]
 
 
 # INPUT PARAMTERS:
-isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
+isAConnect = [False]   # Which network you want to train/test True for A-Connect false for normal LeNet
 Wstd_err = [0]   # Define the stddev for training
 Conv_pool = [8]
 FC_pool = [2]
@@ -109,10 +109,10 @@ if isAConnect[0]:
     #epoch2 = 90
     #epoch3 = 120
 else:
-    epochs = 200
-    epoch1 = 80
-    epoch2 = 120
-    epoch3 = 160
+    epochs = 120
+    epoch1 = 30
+    epoch2 = 60
+    epoch3 = 100
 num_classes = 10
 momentum = 0.9
 batch_size = 256
