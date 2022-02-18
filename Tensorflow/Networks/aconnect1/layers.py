@@ -664,7 +664,7 @@ def Quant_custom(x,self):
         xMin = tf.math.abs(tf.math.reduce_min(xi))
         xMax = tf.math.abs(tf.math.reduce_max(xi))
         #xq = tf.quantization.fake_quant_with_min_max_vars(inputs=xi,min=xMin,max=xMax,num_bits=bwidth)
-        if (xMin >= xMax):
+        if (xMin.numpy() >= xMax.numpy()):
             limit = xMin
         else:
             limit = xMax
