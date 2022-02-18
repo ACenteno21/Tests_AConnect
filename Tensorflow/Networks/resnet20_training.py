@@ -9,7 +9,8 @@ from tensorflow.keras.regularizers import l2
 from tensorflow.keras.models import Model
 from tensorflow.keras.datasets import cifar10
 from ResNet import resnet_v1, resnet_v2
-from aconnect1 import layers, scripts
+from aconnect1 import layers_v2 as layers
+from aconnect1 import scripts
 #from aconnect import layers, scripts
 custom_objects = {'Conv_AConnect':layers.Conv_AConnect,'FC_AConnect':layers.FC_AConnect}
 
