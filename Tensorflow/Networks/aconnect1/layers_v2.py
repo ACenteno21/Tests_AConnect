@@ -284,7 +284,7 @@ class FC_AConnect(tf.keras.layers.Layer):
             else:
                 xi = tf.cast(x,tf.dtypes.float32)
                 limit = tf.math.reduce_max(tf.math.abs(xi))
-                xq = (tf.clip_by_value(tf.floor((x/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
+                xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
                 y = tf.cast(xq,self.d_type)
                 def grad(dy):
                     xe = tf.divide(y,x+1e-5)
