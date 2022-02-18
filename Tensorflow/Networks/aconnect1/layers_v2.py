@@ -271,10 +271,10 @@ class FC_AConnect(tf.keras.layers.Layer):
         def LQuant(self,x):      # Gradient function for weights quantization
             if x.name == "bias":
                 bwidth = self.bw[1]
-                #limit = (2**bwidth)/2
+                limit = (2**bwidth)/2
             else:
                 bwidth = self.bw[0]
-                #limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
+                limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
 
             if (bwidth==1):
                 y = tf.math.sign(x)
@@ -283,7 +283,7 @@ class FC_AConnect(tf.keras.layers.Layer):
                     return dydx
             else:
                 xi = tf.cast(x,tf.dtypes.float32)
-                limit = tf.math.reduce_max(tf.math.abs(xi))
+                #limit = tf.math.reduce_max(tf.math.abs(xi))
                 xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
                 y = tf.cast(xq,self.d_type)
                 def grad(dy):
