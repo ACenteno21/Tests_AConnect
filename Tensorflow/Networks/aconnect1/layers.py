@@ -642,7 +642,8 @@ def Quant_custom(x,self):
         limit = (2**bwidth)/2
     elif x.name == "W" or x.name == "kernel":
         bwidth = self.bw[0]
-        limit = math.sqrt(6/x.get_shape()[0])
+        xStd = tf.math.reduce_std(x)
+        limit = math.sqrt(6/x.get_shape()[0]) + (3*xStd)
     else:
         bwidth = self.bw[0]
         limit = math.sqrt(6/x.get_shape()[0])
