@@ -95,8 +95,8 @@ folder_results = '../Results/'+model_name+'Training_data/'
 learning_rate = 0.1
 momentum = 0.9
 batch_size = 256
-epochs = 100
-lr_decay = 0#1e-4
+epochs = 200
+lr_decay = 1e-6#0
 lr_drop = 20
 """
 lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
@@ -108,10 +108,10 @@ optimizer = tf.optimizers.SGD(learning_rate=lr_schedule,
                             momentum=momentum) #Define optimizer
 """
 def lr_scheduler(epoch):
-    if epoch < 50:
-        lr = 0.01 * (0.5 ** (epoch // lr_drop))
-    else:
-        lr = 0.02 * (0.5 ** ((epoch-50) // lr_drop))
+    #if epoch < 50:
+    lr = 0.1 * (0.5 ** (epoch // lr_drop))
+    #else:
+        #lr = 0.02 * (0.5 ** ((epoch-50) // lr_drop))
 
     print('Learning rate: ', lr)
     return lr
