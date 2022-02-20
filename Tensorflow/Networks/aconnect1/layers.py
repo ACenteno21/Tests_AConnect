@@ -661,7 +661,7 @@ def Quant_custom(x,self):
 
         limit = math.sqrt(6/288)
         if Pre_limit < (limit/2):
-            limit = limit/2
+            limit = 2*Pre_limit
 
         xStd = tf.math.reduce_std(x)
         #xMean = tf.math.reduce_mean(x)
