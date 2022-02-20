@@ -676,9 +676,9 @@ def Quant_custom(x,self):
         xFS = xMax-xMin
         Nlevels = 2**bwidth
         xLSB = xFS/Nlevels
-        xq = tf.floor(x/xLSB+1)
+        xq = tf.floor(xi/xLSB+1)
         xq = tf.clip_by_value(xq,-Nlevels/2+1,Nlevels/2-1)-0.5
-        y = xq*xLSB
+        y = tf.cast(xq*xLSB,self.d_type)
         #"""
 
     def grad(dy):
