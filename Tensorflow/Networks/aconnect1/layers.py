@@ -665,25 +665,25 @@ def Quant_custom(x,self):
         #limit = 1
 
         xi = tf.cast(x,tf.dtypes.float32)
-        xMin = tf.math.reduce_min(xi)
-        xMax = tf.math.reduce_max(xi)
-        #limit = tf.math.reduce_max(tf.math.abs(xi))
-        #xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
+        #xMin = tf.math.reduce_min(xi)
+        #xMax = tf.math.reduce_max(xi)
+        limit = 1#tf.math.reduce_max(tf.math.abs(xi))
+        xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
         #xq = tf.quantization.fake_quant_with_min_max_vars(inputs=xi,min=xMin,max=xMax,num_bits=bwidth)
         #y = tf.cast(xq,self.d_type)
 
-        #"""
+        """
         xFS = xMax-xMin
         Nlevels = 2**bwidth
         xLSB = xFS/Nlevels
         xq = tf.floor(xi/xLSB+1)
         xq = tf.clip_by_value(xq,-Nlevels/2+1,Nlevels/2-1)-0.5
         y = tf.cast(xq*xLSB,self.d_type)
-        #"""
+        """
 
     def grad(dy):
-        e = tf.cast(xLSB,self.d_type)*1e-2
-        #e = 1e-8
+        #e = tf.cast(xLSB,self.d_type)*1e-2
+        e = 1e-5
         xe = tf.divide(y,x+e)
         dydx = tf.multiply(dy,xe)
         return dydx
