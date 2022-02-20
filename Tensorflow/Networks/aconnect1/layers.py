@@ -665,10 +665,11 @@ def Quant_custom(x,self):
         #limit = 1
 
         xi = tf.cast(x,tf.dtypes.float32)
-        #xMin = tf.math.reduce_min(xi)
-        #xMax = tf.math.reduce_max(xi)
-        limit = tf.math.reduce_max(tf.math.abs(xi))
-        xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
+        xMin = tf.math.reduce_min(xi)
+        xMax = tf.math.reduce_max(xi)
+        #limit = tf.math.reduce_max(tf.math.abs(xi))
+        #xq = (tf.clip_by_value(tf.floor((xi/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
+        xq = tf.quantization.fake_quant_with_min_max_vars(inputs=xi,min=xMin,max=xMax,num_bits=bwidth)
         y = tf.cast(xq,self.d_type)
 
         """
