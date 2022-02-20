@@ -660,8 +660,8 @@ def Quant_custom(x,self):
             Pre_limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
 
         limit = math.sqrt(6/9)
-        if Pre_limit < (limit/2):
-            limit = limit/2
+        if Pre_limit < (limit/3):
+            limit = limit/3
 
         xStd = tf.math.reduce_std(x)
         #xMean = tf.math.reduce_mean(x)
