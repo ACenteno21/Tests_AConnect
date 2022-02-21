@@ -661,7 +661,7 @@ def Quant_custom(x,self):
 
         limit = math.sqrt(6/288)
         if Pre_limit < (limit/2):
-            limit = 3*Pre_limit
+            limit = 2*Pre_limit # this form have a good performance with renet20
 
         xStd = tf.math.reduce_std(x)
         #xMean = tf.math.reduce_mean(x)
