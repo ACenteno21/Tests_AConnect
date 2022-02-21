@@ -109,7 +109,7 @@ optimizer = tf.optimizers.SGD(learning_rate=lr_schedule,
 """
 def lr_scheduler(epoch):
     #if epoch < 50:
-    lr = 0.1 * (0.5 ** (epoch // lr_drop))
+    lr = learning_rate * (0.5 ** (epoch // lr_drop))
     #else:
         #lr = 0.02 * (0.5 ** ((epoch-50) // lr_drop))
 
