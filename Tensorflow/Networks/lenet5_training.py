@@ -31,13 +31,13 @@ X_test = np.pad(X_test, ((0,0),(2,2),(2,2)), 'constant')
 X_test = np.float32(X_test) #Convert it to float32
 
 # INPUT PARAMTERS:
-isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
+isAConnect = [False]   # Which network you want to train/test True for A-Connect false for normal LeNet
 #Wstd_err = [0.3,0.5,0.7]   # Define the stddev for training
 Wstd_err = [0.3]	    # Define the stddev for training
 Conv_pool = [2]
 FC_pool = Conv_pool
 WisQuant = ["yes"]		    # Do you want binary weights?
-BisQuant = WisQuant 
+BisQuant = WisQuant
 Wbw = [2]
 Bbw = Wbw
 #errDistr = "lognormal"
@@ -64,7 +64,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
         Wstd_aux = [0]
         FC_pool_aux = [0]
         Conv_pool_aux = [0]
-    
+
     for i in range(len(FC_pool_aux)):
         for p in range (len(WisQuant)):
             if WisQuant[p]=="yes":
@@ -97,19 +97,19 @@ for d in range(len(isAConnect)): #Iterate over the networks
 
                         print("*************************TRAINING NETWORK*********************")
                         print("\n\t\t\t", name)
-                        
+
                         #TRAINING PARAMETERS
                         model.compile(optimizer=optimizer,
                                     loss=['sparse_categorical_crossentropy'],
                                     metrics=['accuracy'])#Compile the model
-                        
+
                         # TRAINING
                         history = model.fit(X_train,Y_train,
                                             batch_size=batch_size,
                                             epochs = epochs,
                                             validation_data=(X_test, Y_test),
                                             shuffle=True)
-                        model.evaluate(X_test,Y_test)    
+                        model.evaluate(X_test,Y_test)
 
                         Y_predict =model.predict(X_test)
                         elapsed_time = time.time() - start_time
@@ -117,13 +117,13 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         print("Elapsed time: {}".format(hms_string(elapsed_time)))
                         print('Tiempo de procesamiento (secs): ', time.time()-tic)
                         #Save the accuracy and the validation accuracy
-                        acc = history.history['accuracy'] 
+                        acc = history.history['accuracy']
                         val_acc = history.history['val_accuracy']
-                        
+
                         # SAVE MODEL:
                         if saveModel:
                             string = folder_models + name + '.h5'
                             model.save(string,include_optimizer=False)
                             #Save in a txt the accuracy and the validation accuracy for further analysis
-                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.2f") 
+                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.2f")
                             np.savetxt(folder_results+name+'_val_acc'+'.txt',val_acc,fmt="%.2f")
