@@ -95,7 +95,7 @@ folder_results = '../Results/'+model_name+'Training_data/'
 learning_rate = 0.1
 momentum = 0.9
 batch_size = 256
-epochs = 100
+epochs = 120
 lr_decay = 1e-6#0
 lr_drop = 20
 """
