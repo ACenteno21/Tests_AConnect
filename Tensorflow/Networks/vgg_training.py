@@ -79,7 +79,7 @@ Conv_pool = [2]
 FC_pool = [2]
 WisQuant = ["yes"]		    # Do you want binary weights?
 BisQuant = ["no"]
-Wbw = [2]
+Wbw = [1]
 Bbw = Wbw
 errDistr = ["lognormal"]
 #errDistr = ["normal"]
@@ -96,7 +96,7 @@ learning_rate = 0.1
 momentum = 0.9
 batch_size = 256
 epochs = 120
-lr_decay = 0#1e-6#0
+lr_decay = 1e-6#0
 lr_drop = 20
 """
 lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(

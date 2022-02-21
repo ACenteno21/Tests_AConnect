@@ -83,6 +83,7 @@ def model_creation(isAConnect=False,Wstd=0,Bstd=0,
                         BatchNormalization(),
                         #Dropout(0.1),
                         FC_AConnect(10,Wstd=Wstd,Bstd=Bstd,errDistr=errDistr,pool=FC_pool,isQuant=isQuant,bw=bw,weights_regularizer = tf.keras.regularizers.l2(0.0005)),
+                        BatchNormalization(),
                         Softmax()
             ])
 
