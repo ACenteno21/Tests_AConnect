@@ -78,11 +78,11 @@ def model_creation(isAConnect=False,Wstd=0,Bstd=0,
                         BatchNormalization(),
                         MaxPool2D(pool_size=(2,2),strides=(2,2)),
                         Flatten(),
-                        #Dropout(0.1),
+                        Dropout(0.1),
                         FC_AConnect(1024,Wstd=Wstd,Bstd=Bstd,errDistr=errDistr,pool=FC_pool,isQuant=isQuant,bw=bw),
                         ReLU(),
                         BatchNormalization(),
-                        #Dropout(0.1),
+                        Dropout(0.1),
                         FC_AConnect(10,Wstd=Wstd,Bstd=Bstd,errDistr=errDistr,pool=FC_pool,isQuant=isQuant,bw=bw),
                         Softmax()
             ])
