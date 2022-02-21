@@ -656,8 +656,8 @@ def Quant_custom(x,self):
 
         if len(x.get_shape())<2:
             #Pre_limit = math.sqrt(6/x.get_shape()[0])
-            #limit = math.sqrt(6/x.get_shape()[0])
-            limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
+            limit = math.sqrt(6/x.get_shape()[0])
+            #limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
         else:
             #Pre_limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
             limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
