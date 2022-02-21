@@ -5,7 +5,7 @@ Due to the memory usage we recommend to uncomment the first train the model and 
 """
 import numpy as np
 import tensorflow as tf
-import VGG1 as vgg
+import VGG7 as vgg
 import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.utils import to_categorical
