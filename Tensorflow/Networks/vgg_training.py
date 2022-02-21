@@ -5,7 +5,7 @@ Due to the memory usage we recommend to uncomment the first train the model and 
 """
 import numpy as np
 import tensorflow as tf
-import VGG1 as vgg
+import VGG7 as vgg
 import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.utils import to_categorical
@@ -94,8 +94,8 @@ folder_results = '../Results/'+model_name+'Training_data/'
 # TRAINING PARAMETERS
 learning_rate = 0.1
 momentum = 0.9
-batch_size = 128
-epochs = 250
+batch_size = 256
+epochs = 100
 lr_decay = 1e-6#0
 lr_drop = 20
 """
