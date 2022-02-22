@@ -10,8 +10,8 @@ import AlexNet as alexnet
 import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import LearningRateScheduler
-from aconnect1 import layers, scripts
-custom_objects = {'Conv_AConnect':layers.Conv_AConnect,'FC_AConnect':layers.FC_AConnect}
+from aconnect1 import layers_v2, scripts
+custom_objects = {'Conv_AConnect':layers_v2.Conv_AConnect,'FC_AConnect':layers_v2.FC_AConnect}
 
 tic=time.time()
 start_time = time.time()
