@@ -279,7 +279,7 @@ class FC_AConnect(tf.keras.layers.Layer):
             if (bwidth==1):
                 y = tf.math.sign(x)
                 def grad(dy):
-                    dydx = tf.divide(dy,abs(x)+1e-5)
+                    dydx = tf.divide(dy,abs(x)+1e-8)
                     return dydx
             else:
                 xi = tf.cast(x,tf.dtypes.float32)
@@ -657,7 +657,7 @@ class Conv_AConnect(tf.keras.layers.Layer):
             if (bwidth==1):
                 y = tf.math.sign(x)
                 def grad(dy):
-                    dydx = tf.divide(dy,abs(x)+1e-5)
+                    dydx = tf.divide(dy,abs(x)+1e-8)
                     return dydx
             else:
                 xi = tf.cast(x,tf.dtypes.float32)
