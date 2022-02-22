@@ -49,11 +49,11 @@ def normalization(train_images, test_images):
 
 # INPUT PARAMTERS:
 isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
-Wstd_err = [0.3]   # Define the stddev for training
+Wstd_err = [0]   # Define the stddev for training
 Conv_pool = [2]
 FC_pool = Conv_pool
 WisQuant = ["yes"]		    # Do you want binary weights?
-BisQuant = ["yes"] 
+BisQuant = ["no"]
 Wbw = [1]
 Bbw = [8]
 #errDistr = "lognormal"
@@ -73,7 +73,7 @@ lr_init = 0.01
 momentum = 0.9
 batch_size = 256
 epochs = 30
-optimizer = tf.optimizers.SGD(learning_rate=0.0, 
+optimizer = tf.optimizers.SGD(learning_rate=0.0,
                             momentum=momentum) #Define optimizer
 
 for d in range(len(isAConnect)): #Iterate over the networks
@@ -85,7 +85,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
         Wstd_aux = [0]
         FC_pool_aux = [0]
         Conv_pool_aux = [0]
-        
+
     for j in range(len(Wstd_aux)):
         if Wstd_aux[j]==0: #is a network with A-Connect?
             FC_pool_aux = [0]
@@ -93,7 +93,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
         else:
             FC_pool_aux = FC_pool
             Conv_pool_aux = Conv_pool
-        
+
         for p in range (len(WisQuant)):
             if WisQuant[p]=="yes":
                 Wbw_aux = Wbw
@@ -135,32 +135,32 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             name = Nm+'Werr'+'_Wstd_'+Werr+'_Bstd_'+Werr+'_'+quant+errDistr[k]+'Distr'
                         else:
                             name = 'Base'
-                        
+
                         print("*************************TRAINING NETWORK*********************")
                         print("\n\t\t\t", name)
 
                         #TRAINING PARAMETERS
-                        model.compile(loss='sparse_categorical_crossentropy', 
-                                optimizer=optimizer, 
+                        model.compile(loss='sparse_categorical_crossentropy',
+                                optimizer=optimizer,
                                 metrics=['accuracy'])
 
                         # TRAINING
-                        def step_decay (epoch): 
-                            initial_lrate = lr_init 
-                            drop = 0.5 
-                            epochs_drop = 30.0 
-                            lrate = initial_lrate * math.pow (drop,  math.floor ((1 + epoch) / epochs_drop)) 
+                        def step_decay (epoch):
+                            initial_lrate = lr_init
+                            drop = 0.5
+                            epochs_drop = 30.0
+                            lrate = initial_lrate * math.pow (drop,  math.floor ((1 + epoch) / epochs_drop))
                             return lrate
                         lrate = LearningRateScheduler(step_decay)
                         callbacks_list = [lrate]
-                        
+
                         history = model.fit(X_train, Y_train,
                                     batch_size=batch_size,
                                     epochs=epochs,
                                     validation_data=(X_test, Y_test),
                                     callbacks=callbacks_list,
                                     shuffle=True)
-                        model.evaluate(X_test,Y_test)    
+                        model.evaluate(X_test,Y_test)
 
                         y_predict =model.predict(X_test)
                         elapsed_time = time.time() - start_time
@@ -168,7 +168,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         print("Elapsed time: {}".format(hms_string(elapsed_time)))
                         print('Tiempo de procesamiento (secs): ', time.time()-tic)
                         #Save the accuracy and the validation accuracy
-                        acc = history.history['accuracy'] 
+                        acc = history.history['accuracy']
                         val_acc = history.history['val_accuracy']
 
                         # SAVE MODEL:
@@ -176,5 +176,5 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             string = folder_models + name + '.h5'
                             model.save(string,include_optimizer=False)
                             #Save in a txt the accuracy and the validation accuracy for further analysis
-                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.2f") 
+                            np.savetxt(folder_results+name+'_acc'+'.txt',acc,fmt="%.2f")
                             np.savetxt(folder_results+name+'_val_acc'+'.txt',val_acc,fmt="%.2f")
