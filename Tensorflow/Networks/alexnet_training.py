@@ -72,7 +72,7 @@ folder_results = '../Results/'+model_name+'Training_data/'
 lr_init = 0.01
 momentum = 0.9
 batch_size = 256
-epochs = 30
+epochs = 100
 optimizer = tf.optimizers.SGD(learning_rate=0.0,
                             momentum=momentum) #Define optimizer
 
@@ -150,6 +150,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                             drop = 0.5
                             epochs_drop = 30.0
                             lrate = initial_lrate * math.pow (drop,  math.floor ((1 + epoch) / epochs_drop))
+                            print(lrate)
                             return lrate
                         lrate = LearningRateScheduler(step_decay)
                         callbacks_list = [lrate]
