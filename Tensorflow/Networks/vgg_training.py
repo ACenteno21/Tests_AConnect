@@ -92,7 +92,7 @@ folder_results = '../Results/'+model_name+'Training_data/'
 #model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
 
 # TRAINING PARAMETERS
-learning_rate = 0.1
+learning_rate = 0.01
 momentum = 0.9
 batch_size = 256
 epochs = 120
@@ -109,7 +109,7 @@ optimizer = tf.optimizers.SGD(learning_rate=lr_schedule,
 """
 def lr_scheduler(epoch):
     #if epoch < 50:
-    lr = 0.1 * (0.5 ** (epoch // lr_drop))
+    lr = 0.01 * (0.5 ** (epoch // lr_drop))
     #else:
         #lr = 0.02 * (0.5 ** ((epoch-50) // lr_drop))
 
