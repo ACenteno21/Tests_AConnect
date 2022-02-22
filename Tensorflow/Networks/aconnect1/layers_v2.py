@@ -657,7 +657,7 @@ class Conv_AConnect(tf.keras.layers.Layer):
             if (bwidth==1):
                 y = tf.math.sign(x)
                 def grad(dy):
-                    dydx = tf.divide(dy,abs(x)+1e-5)
+                    dydx = tf.divide(dy,abs(x)+1e-8)
                     return dydx
             else:
                 xi = tf.cast(x,tf.dtypes.float32)
@@ -665,7 +665,7 @@ class Conv_AConnect(tf.keras.layers.Layer):
                 xq = (tf.clip_by_value(tf.floor((x/limit)*(2**(bwidth-1))+1),-(2**(bwidth-1)-1), 2**(bwidth-1)) -0.5)*(2/(2**bwidth-1))*limit
                 y = tf.cast(xq,self.d_type)
                 def grad(dy):
-                    xe = tf.divide(y,x+1e-8)
+                    xe = tf.divide(y,x+1e-5)
                     dydx = tf.multiply(dy,xe)
                     return dydx
             return y,grad
