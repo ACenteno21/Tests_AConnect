@@ -5,7 +5,7 @@ Due to the memory usage we recommend to uncomment the first train the model and 
 stage and then load the model to test it using the Monte Carlo simulation.
 """
 import tensorflow as tf
-from aconnect1.layers_v2 import Conv_AConnect, FC_AConnect 
+from aconnect1.layers_v2 import Conv_AConnect, FC_AConnect
 from tensorflow.keras.layers import InputLayer, Conv2D, Dense, MaxPool2D, Flatten
 from tensorflow.keras.layers import BatchNormalization, Dropout, ReLU, Softmax
 Xsz = 227
@@ -20,23 +20,26 @@ def model_creation(isAConnect=False,Wstd=0,Bstd=0,
                         tf.keras.layers.experimental.preprocessing.Resizing(Xsz,Xsz),
                         Conv2D(filters=96,kernel_size=(11,11),strides=(4,4),activation='relu',padding="valid"),
                         BatchNormalization(),
-                        MaxPool2D(pool_size=(3,3),strides=(2,2),padding="valid"),
+                        MaxPool2D(pool_size=(3,3),strides=(2,2)),
                         Conv2D(filters=256,kernel_size=(5,5),strides=(1,1),activation='relu',padding="same"),
                         BatchNormalization(),
-                        MaxPool2D(pool_size=(3,3),strides=(2,2),padding="valid"),
+                        MaxPool2D(pool_size=(3,3),strides=(2,2)),
                         Conv2D(filters=384,kernel_size=(3,3),strides=(1,1),activation='relu',padding="same"),
                         BatchNormalization(),
                         Conv2D(filters=384,kernel_size=(3,3),strides=(1,1),activation='relu',padding="same"),
                         BatchNormalization(),
                         Conv2D(filters=256,kernel_size=(3,3),strides=(1,1),activation='relu',padding="same"),
                         BatchNormalization(),
-                        MaxPool2D(pool_size=(3,3),strides=(2,2),padding="valid"),
+                        MaxPool2D(pool_size=(3,3),strides=(2,2)),
                         Flatten(),
-                        Dense(4096,activation='relu'),
+                        Dense(1024,activation='relu'),
+                        BatchNormalization(),
                         Dropout(0.5),
-                        Dense(4096,activation='relu'),
-                        Dropout(0.5),
-                        #Dense(512,activation='relu'),
+                        Dense(1024,activation='relu'),
+                        BatchNormalization(),
+                        #Dropout(0.5),
+                        Dense(512,activation='relu'),
+                        BatchNormalization(),
                         #Dropout(0.5),
                         Dense(10,activation='softmax')
             ])
