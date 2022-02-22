@@ -65,8 +65,8 @@ Nlayers_base = Nlayers
 model_name = 'AlexNet_CIFAR10/'
 folder_models = './Models/'+model_name
 folder_results = '../Results/'+model_name+'Training_data/'
-net_base = folder_models+'Base.h5'
-model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
+#net_base = folder_models+'Base.h5'
+#model_base = tf.keras.models.load_model(net_base,custom_objects=custom_objects)
 
 # TRAINING PARAMETERS
 lr_init = 0.01
