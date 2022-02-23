@@ -48,7 +48,7 @@ def normalization(train_images, test_images):
 (X_train,X_test) = normalization(X_train,X_test)
 
 # INPUT PARAMTERS:
-isAConnect = [False]   # Which network you want to train/test True for A-Connect false for normal LeNet
+isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
 Wstd_err = [0]   # Define the stddev for training
 Conv_pool = [2]
 FC_pool = Conv_pool
