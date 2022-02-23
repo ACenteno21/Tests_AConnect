@@ -148,7 +148,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                         def step_decay (epoch):
                             initial_lrate = lr_init
                             drop = 0.5
-                            epochs_drop = 30.0
+                            epochs_drop = 20.0
                             lrate = initial_lrate * math.pow (drop,  math.floor ((1 + epoch) / epochs_drop))
                             print(lrate)
                             return lrate
