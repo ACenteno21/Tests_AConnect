@@ -9,10 +9,10 @@ import VGG7 as vgg
 import time
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.utils import to_categorical
-from aconnect1 import layers, scripts
+from aconnect1 import layers_v2, scripts
 #from aconnect import layers, scripts
 #from keras.callbacks import LearningRateScheduler
-custom_objects = {'Conv_AConnect':layers.Conv_AConnect,'FC_AConnect':layers.FC_AConnect}
+custom_objects = {'Conv_AConnect':layers_v2.Conv_AConnect,'FC_AConnect':layers_v2.FC_AConnect}
 
 tic=time.time()
 start_time = time.time()
