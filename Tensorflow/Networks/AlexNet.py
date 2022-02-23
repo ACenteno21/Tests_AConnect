@@ -6,8 +6,8 @@ stage and then load the model to test it using the Monte Carlo simulation.
 """
 import tensorflow as tf
 from aconnect1.layers_v2 import Conv_AConnect, FC_AConnect
-from tensorflow.keras.layers import InputLayer, Conv2D, Dense, MaxPool2D, Flatten
-from tensorflow.keras.layers import BatchNormalization, Dropout, ReLU, Softmax
+from tensorflow.keras.layers import InputLayer, Conv2D, Dense, MaxPool2D, Flatten, RandomFlip, RandomRotation, RandomZoom
+from tensorflow.keras.layers import BatchNormalization, Dropout, ReLU, Softmax, RandomTranslation, RandomCrop
 Xsz = 227
 
 def model_creation(isAConnect=False,Wstd=0,Bstd=0,
@@ -18,6 +18,9 @@ def model_creation(isAConnect=False,Wstd=0,Bstd=0,
                 model = tf.keras.models.Sequential([
                         InputLayer(input_shape=[32,32,3]),
                         tf.keras.layers.experimental.preprocessing.Resizing(Xsz,Xsz),
+                        RandomFlip("horizontal"),
+                        RandomTranslation(0.1,0.1),
+                        RandomZoom(0.2),
                         Conv2D(filters=96,kernel_size=(11,11),strides=(4,4),padding="valid"),
                         BatchNormalization(),
                         ReLU(),
@@ -53,6 +56,9 @@ def model_creation(isAConnect=False,Wstd=0,Bstd=0,
                 model = tf.keras.models.Sequential([
                         InputLayer(input_shape=[32,32,3]),
                         tf.keras.layers.experimental.preprocessing.Resizing(Xsz,Xsz),
+                        RandomFlip("horizontal"),
+                        RandomTranslation(0.1,0.1),
+                        RandomZoom(0.2),
                         Conv_AConnect(filters=96,kernel_size=(11,11),Wstd=Wstd,Bstd=Bstd,errDistr=errDistr,pool=Conv_pool,isQuant=isQuant,bw=bw,strides=4,padding="VALID",Op=1,Slice=1,d_type=tf.dtypes.float16),
                         BatchNormalization(),
                         ReLU(),
