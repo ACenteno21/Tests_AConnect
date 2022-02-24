@@ -124,7 +124,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                             batch_size=batch_size,
                                             epochs = epochs,
                                             validation_data=(X_test, Y_test),
-                                            shuffle=True,callbacks = callbacks)
+                                            shuffle=True,callbacks = [lr_schedule])
                         model.evaluate(X_test,Y_test)
 
                         Y_predict =model.predict(X_test)
