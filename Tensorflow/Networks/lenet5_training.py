@@ -3,6 +3,7 @@ import tensorflow as tf
 import LeNet5 as lenet5
 import time
 from aconnect1 import layers, scripts
+from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler
 tic=time.time()
 start_time = time.time()
 def hms_string(sec_elapsed):
