@@ -65,8 +65,8 @@ def lr_schedule(epoch):
 
 
 # Prepare callbacks for model saving and for learning rate adjustment.
-lr_scheduler = LearningRateScheduler(lr_schedule)
-callbacks = [lr_schedule]
+lr_ = LearningRateScheduler(lr_schedule)
+callbacks = [lr_]
 
 optimizer = tf.keras.optimizers.SGD(learning_rate=0.0,momentum=momentum) #Define optimizer
 #####
