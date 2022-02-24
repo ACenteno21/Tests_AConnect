@@ -31,7 +31,7 @@ X_test = np.pad(X_test, ((0,0),(2,2),(2,2)), 'constant')
 X_test = np.float32(X_test) #Convert it to float32
 
 # INPUT PARAMTERS:
-isAConnect = [True]   # Which network you want to train/test True for A-Connect false for normal LeNet
+isAConnect = [False]   # Which network you want to train/test True for A-Connect false for normal LeNet
 #Wstd_err = [0.3,0.5,0.7]   # Define the stddev for training
 Wstd_err = [0.0]	    # Define the stddev for training
 Conv_pool = [2]
@@ -52,7 +52,22 @@ learning_rate = 0.01
 momentum = 0.9
 optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate,momentum=momentum) #Define optimizer
 batch_size = 256
-epochs = 20
+epochs = 25
+
+#######
+
+def lr_schedule(epoch):
+    lr = learning_rate
+    if epoch > 14:
+        lr *= 1e-1
+    print('Learning rate: ', lr)
+    return lr
+
+# Prepare callbacks for model saving and for learning rate adjustment.
+lr_scheduler = LearningRateScheduler(lr_schedule)
+callbacks = [lr_reducer]
+
+#####
 
 ### TRAINING
 for d in range(len(isAConnect)): #Iterate over the networks
@@ -108,7 +123,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                             batch_size=batch_size,
                                             epochs = epochs,
                                             validation_data=(X_test, Y_test),
-                                            shuffle=True)
+                                            shuffle=True,callbacks = callbacks)
                         model.evaluate(X_test,Y_test)
 
                         Y_predict =model.predict(X_test)
