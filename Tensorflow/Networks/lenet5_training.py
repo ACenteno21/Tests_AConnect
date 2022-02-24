@@ -66,7 +66,7 @@ def lr_schedule(epoch):
 
 # Prepare callbacks for model saving and for learning rate adjustment.
 lr_scheduler = LearningRateScheduler(lr_schedule)
-callbacks = [lr_reducer]
+callbacks = [lr_schedule]
 
 #####
 
