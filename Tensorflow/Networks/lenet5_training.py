@@ -51,7 +51,6 @@ folder_results = '../Results/'+model_name+'Training_data/'
 # TRAINING PARAMETERS
 learning_rate = 0.01
 momentum = 0.9
-optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate,momentum=momentum) #Define optimizer
 batch_size = 256
 epochs = 25
 
@@ -64,10 +63,12 @@ def lr_schedule(epoch):
     print('Learning rate: ', lr)
     return lr
 
+
 # Prepare callbacks for model saving and for learning rate adjustment.
 lr_scheduler = LearningRateScheduler(lr_schedule)
 callbacks = [lr_schedule]
 
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.0,momentum=momentum) #Define optimizer
 #####
 
 ### TRAINING
@@ -124,7 +125,8 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                             batch_size=batch_size,
                                             epochs = epochs,
                                             validation_data=(X_test, Y_test),
-                                            shuffle=True,callbacks = [lr_schedule])
+                                            shuffle=True,
+                                            callbacks=callbacks)
                         model.evaluate(X_test,Y_test)
 
                         Y_predict =model.predict(X_test)
