@@ -655,16 +655,16 @@ def Quant_custom(x,self):
 
 
         if len(x.get_shape())<2:
-            Pre_limit = math.sqrt(6/x.get_shape()[0])
-            #limit = math.sqrt(6/x.get_shape()[0])
+            #Pre_limit = math.sqrt(6/x.get_shape()[0])
+            limit = math.sqrt(6/x.get_shape()[0])
             #limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
         else:
-            Pre_limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
-            #limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
+            #Pre_limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
+            limit = math.sqrt(6/(x.get_shape()[0]+x.get_shape()[1]))
 
-        limit = math.sqrt(6/288)
-        if Pre_limit < (limit/2):
-            limit = 2*Pre_limit # this form have a good performance with renet20
+        #limit = math.sqrt(6/288)
+        #if Pre_limit < (limit/2):
+            #limit = 2*Pre_limit # this form have a good performance with renet20
 
         xStd = tf.math.reduce_std(x)
         #xMean = tf.math.reduce_mean(x)
