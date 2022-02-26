@@ -68,7 +68,7 @@ def lr_schedule(epoch):
 lr_ = LearningRateScheduler(lr_schedule)
 callbacks = [lr_]
 
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.0,momentum=momentum) #Define optimizer
+optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate,momentum=momentum) #Define optimizer
 #####
 
 ### TRAINING
@@ -125,8 +125,7 @@ for d in range(len(isAConnect)): #Iterate over the networks
                                             batch_size=batch_size,
                                             epochs = epochs,
                                             validation_data=(X_test, Y_test),
-                                            shuffle=True,
-                                            callbacks=callbacks)
+                                            shuffle=True)
                         model.evaluate(X_test,Y_test)
 
                         Y_predict =model.predict(X_test)
