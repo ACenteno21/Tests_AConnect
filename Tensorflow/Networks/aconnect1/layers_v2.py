@@ -274,7 +274,10 @@ class FC_AConnect(tf.keras.layers.Layer):
                 limit = (2**bwidth)/2
             else:
                 bwidth = self.bw[0]
-                limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
+                if len(x.get_shape())<2:
+                    limit = math.sqrt(6/x.get_shape()[0])
+                else:
+                    limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
 
             if (bwidth==1):
                 y = tf.math.sign(x)
@@ -652,7 +655,10 @@ class Conv_AConnect(tf.keras.layers.Layer):
                 limit = (2**bwidth)/2
             else:
                 bwidth = self.bw[0]
-                limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
+                if len(x.get_shape())<2:
+                    limit = math.sqrt(6/x.get_shape()[0])
+                else:
+                    limit = math.sqrt(6/((x.get_shape()[0])+(x.get_shape()[1])))
 
             if (bwidth==1):
                 y = tf.math.sign(x)
