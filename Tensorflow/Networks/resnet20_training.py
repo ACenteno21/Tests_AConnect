@@ -12,7 +12,7 @@ from ResNet import resnet_v1, resnet_v2
 #from aconnect1 import layers_v2 as layers
 #from aconnect1 import scripts
 from aconnect1 import layers, scripts
-custom_objects = {'Conv_AConnect':layers_v2.Conv_AConnect,'FC_AConnect':layers_v2.FC_AConnect}
+custom_objects = {'Conv_AConnect':layers.Conv_AConnect,'FC_AConnect':layers.FC_AConnect}
 
 # ----------------------------------------------------------------------------
 #           |      | 200-epoch | Orig Paper| 200-epoch | Orig Paper| sec/epoch
