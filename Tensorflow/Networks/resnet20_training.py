@@ -11,7 +11,7 @@ from tensorflow.keras.datasets import cifar10
 from ResNet import resnet_v1, resnet_v2
 #from aconnect1 import layers_v2 as layers
 #from aconnect1 import scripts
-from aconnect1 import layers_v2, scripts
+from aconnect1 import layers, scripts
 custom_objects = {'Conv_AConnect':layers_v2.Conv_AConnect,'FC_AConnect':layers_v2.FC_AConnect}
 
 # ----------------------------------------------------------------------------
